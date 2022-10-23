@@ -336,6 +336,40 @@
   <data name="ErrorMessage_InvalidChar" xml:space="preserve">
     <value>File name contains invalid character(s):&#xD;&#xA; &gt; &lt; | " : ? * \ /</value>
   </data>
-
-
+  <data name="CheckBox_Metadata.Content" xml:space="preserve">
+    <value>Use metadata replacements</value>
+  </data>
+  <data name="MetadataCheatSheetTitle.Text" xml:space="preserve">
+    <value>Metadata replacement help</value>
+  </data>
+  <data name="MetadataCheatSheet_FileSize" xml:space="preserve">
+    <value>The file size</value>
+  </data>
+  <data name="MetadataCheatSheet_Title" xml:space="preserve">
+    <value>The title of a song or document</value>
+  </data>
+  <data name="MetadataCheatSheet_Artist" xml:space="preserve">
+    <value>The artist of a song</value>
+  </data>
+  <data name="MetadataCheatSheet_Album" xml:space="preserve">
+    <value>The album of a song</value>
+  </data>
+  <data name="MetadataCheatSheet_Genre" xml:space="preserve">
+    <value>The genre of a song</value>
+  </data>
+  <data name="MetadataCheatSheet_Track" xml:space="preserve">
+    <value>The track number of a song in an album</value>
+  </data>
+  <data name="MetadataCheatSheet_Author" xml:space="preserve">
+    <value>The author of the document</value>
+  </data>
+  <data name="MetadataCheatSheet_CameraMake" xml:space="preserve">
+    <value>The camera make of the photo</value>
+  </data>
+  <data name="MetadataCheatSheet_CameraModel" xml:space="preserve">
+    <value>The camera model of the photo</value>
+  </data>
+  <data name="MetadataCheatSheetHint.Text" xml:space="preserve">
+    <value>If the metadata is not set for the file, then the replacement is empty</value>
+  </data>
 </root>

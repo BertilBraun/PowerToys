@@ -12,6 +12,7 @@ namespace PowerRenameUI
 
         Windows.Foundation.Collections.IObservableVector<ExplorerItem> ExplorerItems { get; };
         Windows.Foundation.Collections.IObservableVector<PatternSnippet> SearchRegExShortcuts { get; };
+        Windows.Foundation.Collections.IObservableVector<PatternSnippet> SearchMetadataShortcuts { get; };
         Windows.Foundation.Collections.IObservableVector<PatternSnippet> DateTimeShortcuts { get; };
 
         String OriginalCount;

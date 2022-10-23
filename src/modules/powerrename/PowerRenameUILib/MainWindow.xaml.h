@@ -79,6 +79,7 @@ namespace winrt::PowerRenameUI::implementation
         Windows::Foundation::Collections::IObservableVector<hstring> ReplaceMRU() { return m_replaceMRUList; }
         winrt::Windows::Foundation::Collections::IObservableVector<PowerRenameUI::ExplorerItem> ExplorerItems() { return m_explorerItems; }
         winrt::Windows::Foundation::Collections::IObservableVector<PowerRenameUI::PatternSnippet> SearchRegExShortcuts() { return m_searchRegExShortcuts; }
+        winrt::Windows::Foundation::Collections::IObservableVector<PowerRenameUI::PatternSnippet> SearchMetadataShortcuts() { return m_searchMetadataShortcuts; }
         winrt::Windows::Foundation::Collections::IObservableVector<PowerRenameUI::PatternSnippet> DateTimeShortcuts() { return m_dateTimeShortcuts; }
         hstring OriginalCount();
         void OriginalCount(hstring value);
@@ -103,6 +104,7 @@ namespace winrt::PowerRenameUI::implementation
         winrt::Windows::Foundation::Collections::IObservableVector<PowerRenameUI::ExplorerItem> m_explorerItems;
         std::map<int32_t, PowerRenameUI::ExplorerItem> m_explorerItemsMap;
         winrt::Windows::Foundation::Collections::IObservableVector<PowerRenameUI::PatternSnippet> m_searchRegExShortcuts;
+        winrt::Windows::Foundation::Collections::IObservableVector<PowerRenameUI::PatternSnippet> m_searchMetadataShortcuts;
         winrt::Windows::Foundation::Collections::IObservableVector<PowerRenameUI::PatternSnippet> m_dateTimeShortcuts;
 
         // Used by PowerRenameManagerEvents

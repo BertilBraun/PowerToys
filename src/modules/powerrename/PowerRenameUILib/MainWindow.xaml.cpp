@@ -115,6 +115,17 @@ namespace winrt::PowerRenameUI::implementation
         m_searchRegExShortcuts.Append(winrt::make<PatternSnippet>(L"\\S+", manager.MainResourceMap().GetValue(L"Resources/RegExCheatSheet_MatchOneOrMoreWS").ValueAsString()));
         m_searchRegExShortcuts.Append(winrt::make<PatternSnippet>(L"\\b", manager.MainResourceMap().GetValue(L"Resources/RegExCheatSheet_MatchWordBoundary").ValueAsString()));
 
+        m_searchMetadataShortcuts = winrt::single_threaded_observable_vector<PowerRenameUI::PatternSnippet>();
+        m_searchMetadataShortcuts.Append(winrt::make<PatternSnippet>(L"{FILE_SIZE}", manager.MainResourceMap().GetValue(L"Resources/MetadataCheatSheet_FileSize").ValueAsString()));
+        m_searchMetadataShortcuts.Append(winrt::make<PatternSnippet>(L"{TITLE}", manager.MainResourceMap().GetValue(L"Resources/MetadataCheatSheet_Title").ValueAsString()));
+        m_searchMetadataShortcuts.Append(winrt::make<PatternSnippet>(L"{ARTIST}", manager.MainResourceMap().GetValue(L"Resources/MetadataCheatSheet_Artist").ValueAsString()));
+        m_searchMetadataShortcuts.Append(winrt::make<PatternSnippet>(L"{ALBUM}", manager.MainResourceMap().GetValue(L"Resources/MetadataCheatSheet_Album").ValueAsString()));
+        m_searchMetadataShortcuts.Append(winrt::make<PatternSnippet>(L"{GENRE}", manager.MainResourceMap().GetValue(L"Resources/MetadataCheatSheet_Genre").ValueAsString()));
+        m_searchMetadataShortcuts.Append(winrt::make<PatternSnippet>(L"{TRACK}", manager.MainResourceMap().GetValue(L"Resources/MetadataCheatSheet_Track").ValueAsString()));
+        m_searchMetadataShortcuts.Append(winrt::make<PatternSnippet>(L"{AUTHOR}", manager.MainResourceMap().GetValue(L"Resources/MetadataCheatSheet_Author").ValueAsString()));
+        m_searchMetadataShortcuts.Append(winrt::make<PatternSnippet>(L"{CAMERA_MAKE}", manager.MainResourceMap().GetValue(L"Resources/MetadataCheatSheet_CameraMake").ValueAsString()));
+        m_searchMetadataShortcuts.Append(winrt::make<PatternSnippet>(L"{CAMERA_MODEL}", manager.MainResourceMap().GetValue(L"Resources/MetadataCheatSheet_CameraModel").ValueAsString()));
+       
         m_dateTimeShortcuts = winrt::single_threaded_observable_vector<PowerRenameUI::PatternSnippet>();
         m_dateTimeShortcuts.Append(winrt::make<PatternSnippet>(L"$YYYY", manager.MainResourceMap().GetValue(L"Resources/DateTimeCheatSheet_FullYear").ValueAsString()));
         m_dateTimeShortcuts.Append(winrt::make<PatternSnippet>(L"$YY", manager.MainResourceMap().GetValue(L"Resources/DateTimeCheatSheet_YearLastTwoDigits").ValueAsString()));
@@ -627,6 +638,15 @@ namespace winrt::PowerRenameUI::implementation
             UpdateFlag(UseRegularExpressions, UpdateFlagCommand::Reset);
         });
 
+        // CheckBox Metadata
+        checkBox_metadata().Checked([&](auto const&, auto const&) {
+            ValidateFlags(UseMetadataReplacements);
+            UpdateFlag(UseMetadataReplacements, UpdateFlagCommand::Set);
+        });
+        checkBox_metadata().Unchecked([&](auto const&, auto const&) {
+            UpdateFlag(UseMetadataReplacements, UpdateFlagCommand::Reset);
+        });
+
         // CheckBox CaseSensitive
         checkBox_case().Checked([&](auto const&, auto const&) {
             ValidateFlags(CaseSensitive);
@@ -898,6 +918,10 @@ namespace winrt::PowerRenameUI::implementation
         if (flags & UseRegularExpressions)
         {
             checkBox_regex().IsChecked(true);
+        }
+        if (flags & UseMetadataReplacements)
+        {
+            checkBox_metadata().IsChecked(true);
         }
         if (flags & EnumerateItems)
         {
