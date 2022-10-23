@@ -265,6 +265,12 @@ HRESULT CPowerRenameRegEx::Replace(_In_ PCWSTR source, _Outptr_ PWSTR* result)
         replaceTerm = regex_replace(replaceTerm, std::wregex(L"(([^\\$]|^)(\\$\\$)*)\\$[0]"), L"$1$$$0");
         replaceTerm = regex_replace(replaceTerm, std::wregex(L"(([^\\$]|^)(\\$\\$)*)\\$([1-9])"), L"$1$0$4");
 
+        wstring sourceInput = source;
+        if (m_flags & UseMetadataReplacements)
+        {
+            sourceInput = _DoMetadataReplacements(sourceInput);
+        }
+
         if (m_flags & UseRegularExpressions)
         {
             if (_useBoostLib)
@@ -272,11 +278,11 @@ HRESULT CPowerRenameRegEx::Replace(_In_ PCWSTR source, _Outptr_ PWSTR* result)
                 boost::wregex pattern(m_searchTerm, (!(m_flags & CaseSensitive)) ? boost::regex::icase | boost::regex::ECMAScript : boost::regex::ECMAScript);
                 if (m_flags & MatchAllOccurrences)
                 {
-                    res = boost::regex_replace(wstring(source), pattern, replaceTerm);
+                    res = boost::regex_replace(sourceInput, pattern, replaceTerm);
                 }
                 else
                 {
-                    res = boost::regex_replace(wstring(source), pattern, replaceTerm, boost::regex_constants::format_first_only);
+                    res = boost::regex_replace(sourceInput, pattern, replaceTerm, boost::regex_constants::format_first_only);
                 }
             }
             else
@@ -284,32 +290,18 @@ HRESULT CPowerRenameRegEx::Replace(_In_ PCWSTR source, _Outptr_ PWSTR* result)
                 std::wregex pattern(m_searchTerm, (!(m_flags & CaseSensitive)) ? regex_constants::icase | regex_constants::ECMAScript : regex_constants::ECMAScript);
                 if (m_flags & MatchAllOccurrences)
                 {
-                    res = regex_replace(wstring(source), pattern, replaceTerm);
+                    res = regex_replace(sourceInput, pattern, replaceTerm);
                 }
                 else
                 {
-                    res = regex_replace(wstring(source), pattern, replaceTerm, regex_constants::format_first_only);
+                    res = regex_replace(sourceInput, pattern, replaceTerm, regex_constants::format_first_only);
                 }
             }
         }
         else
         {
             // Simple search and replace
-            size_t pos = 0;
-            do
-            {
-                pos = _Find(sourceToUse, searchTerm, (!(m_flags & CaseSensitive)), pos);
-                if (pos != std::string::npos)
-                {
-                    res = sourceToUse.replace(pos, searchTerm.length(), replaceTerm);
-                    pos += replaceTerm.length();
-                }
-
-                if (!(m_flags & MatchAllOccurrences))
-                {
-                    break;
-                }
-            } while (pos != std::string::npos);
+            _SearchAndReplace(sourceToUse, searchTerm, replaceTerm, res, (!(m_flags & CaseSensitive)), m_flags & MatchAllOccurrences);
         }
 
         hr = SHStrDup(res.c_str(), result);
@@ -319,6 +311,48 @@ HRESULT CPowerRenameRegEx::Replace(_In_ PCWSTR source, _Outptr_ PWSTR* result)
         hr = E_FAIL;
     }
     return hr;
+}
+
+std::wstring CPowerRenameRegEx::_DoMetadataReplacements(std::wstring source)
+{
+    // TODO fetch metadata information from source file and populate replacements
+    std::vector<std::pair<std::wstring, std::wstring>> replacements {
+        { L"{FILE_SIZE}", L"" },
+        { L"{TITLE}", L"" },
+        { L"{ARTIST}", L"" },
+        { L"{ALBUM}", L"" },
+        { L"{GENRE}", L"" },
+        { L"{TRACK}", L"" },
+        { L"{AUTHOR}", L"" },
+        { L"{CAMERA_MAKE}", L"" },
+        { L"{CAMERA_MODEL}", L"" },
+    };
+
+    for (auto& [searchTerm, replacementTerm] : replacements)
+    {
+        _SearchAndReplace(source, searchTerm, replacementTerm, source, false, true);
+    }
+
+    return source;
+}
+
+void CPowerRenameRegEx::_SearchAndReplace(std::wstring sourceToUse, const std::wstring& searchTerm, const std::wstring& replaceTerm, std::wstring& res, bool caseInsensitive, bool matchAllOccurrences)
+{
+    size_t pos = 0;
+    do
+    {
+        pos = _Find(sourceToUse, searchTerm, caseInsensitive, pos);
+        if (pos != std::string::npos)
+        {
+            res = sourceToUse.replace(pos, searchTerm.length(), replaceTerm);
+            pos += replaceTerm.length();
+        }
+
+        if (!matchAllOccurrences)
+        {
+            break;
+        }
+    } while (pos != std::string::npos);
 }
 
 size_t CPowerRenameRegEx::_Find(std::wstring data, std::wstring toSearch, bool caseInsensitive, size_t pos)

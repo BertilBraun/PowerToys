@@ -17,7 +17,8 @@ enum PowerRenameFlags
     Uppercase = 0x200,
     Lowercase = 0x400,
     Titlecase = 0x800,
-    Capitalized = 0x1000
+    Capitalized = 0x1000,
+    UseMetadataReplacements = 0x2000
 };
 
 enum PowerRenameFilters

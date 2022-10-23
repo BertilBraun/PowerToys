@@ -40,6 +40,10 @@ protected:
     void _OnFlagsChanged();
     void _OnFileTimeChanged();
 
+    std::wstring _DoMetadataReplacements(std::wstring source);
+
+    void _SearchAndReplace(std::wstring sourceToUse, const std::wstring& searchTerm, const std::wstring& replaceTerm, std::wstring& res, bool caseInsensitive, bool matchAllOccurrences);
+
     size_t _Find(std::wstring data, std::wstring toSearch, bool caseInsensitive, size_t pos);
 
     bool _useBoostLib = false;
